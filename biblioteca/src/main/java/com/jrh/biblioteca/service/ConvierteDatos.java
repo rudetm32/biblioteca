@@ -2,9 +2,10 @@ package com.jrh.biblioteca.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
-
+@Service
 public class ConvierteDatos implements IConvierteDatos {
 
     private ObjectMapper mapper = new ObjectMapper();
@@ -14,7 +15,7 @@ public class ConvierteDatos implements IConvierteDatos {
         try {
             return mapper.readValue(json, clase);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error al procesar el JSON: " + e.getMessage(), e);
+            throw new RuntimeException("Error al procesar la informacion: " + e.getMessage(), e);
         }
     }
 }

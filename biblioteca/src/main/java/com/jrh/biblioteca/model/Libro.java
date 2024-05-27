@@ -1,22 +1,47 @@
 package com.jrh.biblioteca.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
-@JsonIgnoreProperties(ignoreUnknown = true)
+import java.util.stream.Collectors;
+
+@Entity
+@Table(name = "libros")
 public class Libro {
-   private String titulo;
-   private List<Autor> autor;
-   private Integer descargas;
-   private String idioma;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long Id;
 
-    public Libro(){}
-    public Libro(String titulo, List<Autor> autor, Integer descargas, String idioma) {
-        this.titulo = titulo;
-        this.autor = autor;
-        this.descargas = descargas;
-        this.idioma = idioma;
+    @Column(unique=true)
+    private String titulo;
+    private Long descargas;
+
+    @ElementCollection
+    private List<String> idioma = new ArrayList<>();
+
+    @OneToMany(mappedBy = "libro", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Autor> autores = new ArrayList<>();
+
+    public Libro() {}
+
+    public Libro(DatosLibro datosLibro) {
+        this.titulo = datosLibro.titulo();
+        this.descargas = datosLibro.descargas();
+        this.idioma = datosLibro.idioma();
+        this.autores = datosLibro.autor().stream()
+                .map(datosAutor -> new Autor(datosAutor, this))
+                .collect(Collectors.toList());
+    }
+
+    // Getters and setters
+
+    public Long getId() {
+        return Id;
+    }
+
+    public void setId(Long id) {
+        Id = id;
     }
 
     public String getTitulo() {
@@ -27,28 +52,28 @@ public class Libro {
         this.titulo = titulo;
     }
 
-    public List<Autor> getAutor() {
-        return autor;
-    }
-
-    public void setAutor(List<Autor> autor) {
-        this.autor = autor;
-    }
-
-    public Integer getDescargas() {
+    public Long getDescargas() {
         return descargas;
     }
 
-    public void setDescargas(Integer descargas) {
+    public void setDescargas(Long descargas) {
         this.descargas = descargas;
     }
 
-    public String getIdioma() {
+    public List<String> getIdioma() {
         return idioma;
     }
 
-    public void setIdioma(String idioma) {
+    public void setIdioma(List<String> idioma) {
         this.idioma = idioma;
     }
 
+    public List<Autor> getAutores() {
+        return autores;
+    }
+
+    public void setAutores(List<Autor> autores) {
+        autores.forEach(autor -> autor.setLibro(this));
+        this.autores = autores;
+    }
 }

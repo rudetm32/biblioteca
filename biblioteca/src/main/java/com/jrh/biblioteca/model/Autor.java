@@ -1,23 +1,40 @@
 package com.jrh.biblioteca.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 
-import java.time.LocalDate;
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Entity
+@Table(name = "autores")
 public class Autor {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long Id;
+
     private String nombre;
     private Integer anioDeNacimiento;
-    private Integer AnioDeFallecimiento;
+    private Integer anioDeFallecimiento;
 
+    @ManyToOne
+    @JoinColumn(name = "libro_id")
+    private Libro libro;
 
-    public Autor(){}
-    public Autor(String nombre, Integer anioDeNacimiento, Integer anioDeFallecimiento) {
-        this.nombre = nombre;
-        this.anioDeNacimiento = anioDeNacimiento;
-        this.AnioDeFallecimiento = anioDeFallecimiento;
+    public Autor() {}
+
+    public Autor(DatosAutor datosAutor, Libro libro) {
+        this.nombre = datosAutor.nombre();
+        this.anioDeNacimiento = datosAutor.anioDeNacimiento();
+        this.anioDeFallecimiento = datosAutor.AnioDeFallecimiento();
+        this.libro = libro;
     }
 
-    public Autor(String nombreAutor) {
+    // Getters and setters
+
+    public Long getId() {
+        return Id;
+    }
+
+    public void setId(Long id) {
+        Id = id;
     }
 
     public String getNombre() {
@@ -37,10 +54,18 @@ public class Autor {
     }
 
     public Integer getAnioDeFallecimiento() {
-        return AnioDeFallecimiento;
+        return anioDeFallecimiento;
     }
 
     public void setAnioDeFallecimiento(Integer anioDeFallecimiento) {
-        AnioDeFallecimiento = anioDeFallecimiento;
+        this.anioDeFallecimiento = anioDeFallecimiento;
+    }
+
+    public Libro getLibro() {
+        return libro;
+    }
+
+    public void setLibro(Libro libro) {
+        this.libro = libro;
     }
 }
