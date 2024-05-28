@@ -62,8 +62,18 @@ public class Principal {
             }
             switch(opcionMenu){
                 case 1:
-                    ConsultarLibro();;
+                    consultarLibro();
                     break;
+                case 2:
+                    consultarTodosLosLibros();
+                    break;
+                case 3:
+                    consultarAutoresRegistrados();
+                    break;
+                case 4:
+                    consultarAutoresVivosPorAnio();
+                case 5:
+                    consultarLibrosPorIdioma();
                 case 0:
                     System.out.println("Gracias por su visita. ¡ Hasta pronto !");
                     break;
@@ -74,7 +84,7 @@ public class Principal {
         }
     }
 
-    private void ConsultarLibro(){
+    private void consultarLibro(){
         System.out.println("Ingrese el titulo del libro: ");
         var nombreLibro = entrada.nextLine();
         var json = consumoAPI.getData(URL_BASE + "?search=" + nombreLibro.replace(" ", "+"));
@@ -86,13 +96,60 @@ public class Principal {
 
         if(libroEncontrado.isPresent()) {
             DatosLibro datosLibro = libroEncontrado.get();
-            Libro libro = new Libro(datosLibro);
-            libroService.guardarLibro(libro);
-            mostrarDatosLibro(datosLibro);
-        }else {
-            System.out.println("Titulo del libro inexistente en la db");
-        }
+            Optional<Libro> libroExistente = libroService.buscarPorTitulo((datosLibro.titulo()));
 
+            if(libroExistente.isEmpty()) {
+                Libro libro = new Libro(datosLibro);
+                libroService.guardarLibro(libro);
+                mostrarDatosLibro(datosLibro);
+
+            } else {
+                System.out.println("El libro ya existe en la db");
+
+            }
+        } else {
+            System.out.println("Titulo del libro inexistente en la db");
+
+        }
+    }
+    private void consultarTodosLosLibros() {
+        List<Libro> libros = libroService.obtenerTodosLosLibros();
+        if(libros.isEmpty()){
+            System.out.println("No hay libros registrados");
+        } else {
+            libros.sort(Comparator.comparing(Libro::getTitulo));
+
+            System.out.println("\nLibros registrados : \n");
+            libros.forEach(libro -> {
+                String autores = libro.getAutores().stream()
+                        .map(Autor::getNombre)
+                        .reduce((a, b) -> a + ", " + b)
+                        .orElse("Desconocido");
+
+                String output = """
+                        -------------------------------------------------
+                        Título       : %s
+                        Autores      : %s
+                        Lenguaje     : %s
+                        -------------------------------------------------
+                        """.formatted(libro.getTitulo(), autores, libro.getIdioma().get(0));
+
+                System.out.println(output);
+           });
+            System.out.println("Total de registros en la db: " + libros.size());
+        }
+    }
+
+    private void consultarAutoresRegistrados() {
+        System.out.println("autores por año");
+    }
+
+    private void consultarAutoresVivosPorAnio() {
+        System.out.println("autores vivos");
+    }
+
+    private void consultarLibrosPorIdioma() {
+        System.out.println("libros por idioma");
     }
 
     private void mostrarDatosLibro(DatosLibro libro) {
@@ -109,7 +166,7 @@ public class Principal {
         System.out.println("Descargas    : " + libro.descargas());
 
         System.out.println();
-        System.out.println("-------------------------------------------------");
+        System.out.println("-------------------------------------------------\n");
     }
 
 }
