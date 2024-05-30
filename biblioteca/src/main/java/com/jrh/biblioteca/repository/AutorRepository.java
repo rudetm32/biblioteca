@@ -11,7 +11,9 @@ public interface AutorRepository extends JpaRepository<Autor, Long> {
 
     Autor findByNombre(String nombre);
 
-    @Query("SELECT a FROM Autor a WHERE SUBSTRING(a.fechaNacimiento, 1, 4) < :finPeriodo AND (a.fechaDefuncion IS NULL OR SUBSTRING(a.fechaDefuncion, 1, 4) > :inicioPeriodo)")
-    List<Autor> autorVivoEnPeriodo(@Param("inicioPeriodo") String inicioPeriodo, @Param("finPeriodo") String finPeriodo);
+    @Query("SELECT a FROM Autor a " +
+            "WHERE a.fechaNacimiento < :finPeriodo " +
+            "AND (a.fechaDefuncion IS NULL OR a.fechaDefuncion > :inicioPeriodo)")
+    List<Autor> buscarAutoresVivos(@Param("inicioPeriodo") Integer inicioPeriodo, @Param("finPeriodo") Integer finPeriodo);
 
 }

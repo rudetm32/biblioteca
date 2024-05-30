@@ -11,8 +11,8 @@ public class Autor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
-    private String fechaNacimiento;
-    private String fechaDefuncion;
+    private Integer fechaNacimiento;
+    private Integer fechaDefuncion;
     @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Libro> libro;
 
@@ -40,19 +40,19 @@ public class Autor {
         this.nombre = nombre;
     }
 
-    public String getFechaNacimiento() {
+    public Integer getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(String fechaNacimiento) {
+    public void setFechaNacimiento(Integer fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public String getFechaDefuncion() {
+    public Integer getFechaDefuncion() {
         return fechaDefuncion;
     }
 
-    public void setFechaDefuncion(String fechaDefuncion) {
+    public void setFechaDefuncion(Integer fechaDefuncion) {
         this.fechaDefuncion = fechaDefuncion;
     }
 

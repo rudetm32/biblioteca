@@ -143,7 +143,7 @@ public class Principal {
 
             String titulosLibros = autor.getLibro().stream()
                     .map(Libro::getTitulo)
-                    .collect(Collectors.joining(", "));
+                    .collect(Collectors.joining(" || "));
 
             System.out.println("Libros: " + titulosLibros);
             System.out.println("---------------------------------------------------");
@@ -153,13 +153,13 @@ public class Principal {
 
     private void autoresVivosPorPeriodo() {
         System.out.println("Ingrese fecha inicial (YYYY):");
-        String inicioPeriodo = teclado.nextLine();
+        Integer inicioPeriodo = teclado.nextInt();
         System.out.println("Ingrese fecha final (YYYY):");
-        String finPeriodo = teclado.nextLine();
+        Integer finPeriodo = teclado.nextInt();
 
         try {
 
-            List<Autor> autoresVivos = autorRepository.autorVivoEnPeriodo(inicioPeriodo, finPeriodo);
+            List<Autor> autoresVivos = autorRepository.buscarAutoresVivos(inicioPeriodo, finPeriodo);
             if(autoresVivos.isEmpty()){
                 System.out.println("\nNo hay autores vivos en ese periodo");
             } else {
