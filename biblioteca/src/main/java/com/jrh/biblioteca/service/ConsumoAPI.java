@@ -1,31 +1,28 @@
 package com.jrh.biblioteca.service;
 
-import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-@Service
 public class ConsumoAPI {
-    public String getData(String url) {
-        HttpClient client = HttpClient.newBuilder()
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                .build();
+    public String consumirDatos(String url){
+        HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .build();
         HttpResponse<String> response = null;
         try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            //System.out.println("HTTP Response: " + response.statusCode());
-        } catch (IOException | InterruptedException e) {
-            System.err.println("Error en la solicitud HTTP: " + e.getMessage());
+            response = client
+                    .send(request, HttpResponse.BodyHandlers.ofString());
+        }catch (IOException e){
+            throw new RuntimeException(e);
+        }catch (InterruptedException e){
             throw new RuntimeException(e);
         }
+        String json = response.body();
 
-        return response.body();
+        return json;
     }
 }

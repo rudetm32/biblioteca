@@ -1,40 +1,35 @@
 package com.jrh.biblioteca.model;
 
 import jakarta.persistence.*;
+import java.util.List;
+
 
 @Entity
 @Table(name = "autores")
 public class Autor {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
-
+    private Long id;
     private String nombre;
-    private Integer anioDeNacimiento;
-    private Integer anioDeFallecimiento;
+    private String fechaNacimiento;
+    private String fechaDefuncion;
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Libro> libro;
 
-    @ManyToOne
-    @JoinColumn(name = "libro_id")
-    private Libro libro;
+    public Autor(){}
 
-    public Autor() {}
-
-    public Autor(DatosAutor datosAutor, Libro libro) {
-        this.nombre = datosAutor.nombre();
-        this.anioDeNacimiento = datosAutor.anioDeNacimiento();
-        this.anioDeFallecimiento = datosAutor.AnioDeFallecimiento();
-        this.libro = libro;
+    public Autor(DatosAutor datos) {
+        this.nombre = datos.nombre();
+        this.fechaNacimiento = datos.fechaNaciamiento();
+        this.fechaDefuncion = datos.fechaDefuncion();
     }
 
-    // Getters and setters
-
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getNombre() {
@@ -45,27 +40,27 @@ public class Autor {
         this.nombre = nombre;
     }
 
-    public Integer getAnioDeNacimiento() {
-        return anioDeNacimiento;
+    public String getFechaNacimiento() {
+        return fechaNacimiento;
     }
 
-    public void setAnioDeNacimiento(Integer anioDeNacimiento) {
-        this.anioDeNacimiento = anioDeNacimiento;
+    public void setFechaNacimiento(String fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
     }
 
-    public Integer getAnioDeFallecimiento() {
-        return anioDeFallecimiento;
+    public String getFechaDefuncion() {
+        return fechaDefuncion;
     }
 
-    public void setAnioDeFallecimiento(Integer anioDeFallecimiento) {
-        this.anioDeFallecimiento = anioDeFallecimiento;
+    public void setFechaDefuncion(String fechaDefuncion) {
+        this.fechaDefuncion = fechaDefuncion;
     }
 
-    public Libro getLibro() {
+    public List<Libro> getLibro() {
         return libro;
     }
 
-    public void setLibro(Libro libro) {
+    public void setLibro(List<Libro> libro) {
         this.libro = libro;
     }
 }

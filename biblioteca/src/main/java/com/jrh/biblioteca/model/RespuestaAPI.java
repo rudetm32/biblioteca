@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record APIResponse(
-        @JsonAlias("results") List<DatosLibro> Libros
-) {
-
+public record RespuestaAPI(
+        @JsonAlias("results") List<DatosLibros> libros){
 }

@@ -1,47 +1,35 @@
 package com.jrh.biblioteca.model;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Entity
 @Table(name = "libros")
 public class Libro {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
-
-    @Column(unique=true)
+    private Long id;
     private String titulo;
-    private Long descargas;
+    @ManyToOne
+    private Autor autor;
+    private String idioma;
+    private Integer numeroDeDescargas;
 
-    @ElementCollection
-    private List<String> idioma = new ArrayList<>();
+    public Libro(){}
 
-    @OneToMany(mappedBy = "libro", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Autor> autores = new ArrayList<>();
-
-    public Libro() {}
-
-    public Libro(DatosLibro datosLibro) {
-        this.titulo = datosLibro.titulo();
-        this.descargas = datosLibro.descargas();
-        this.idioma = datosLibro.idioma();
-        this.autores = datosLibro.autor().stream()
-                .map(datosAutor -> new Autor(datosAutor, this))
-                .collect(Collectors.toList());
+    public Libro(DatosLibros datosLibros, Autor autor) {
+        this.titulo = datosLibros.titulo();
+        this.idioma = datosLibros.idioma().get(0);
+        this.numeroDeDescargas = datosLibros.numeroDeDescargas();
+        this.autor = autor;
     }
 
-    // Getters and setters
-
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getTitulo() {
@@ -52,28 +40,27 @@ public class Libro {
         this.titulo = titulo;
     }
 
-    public Long getDescargas() {
-        return descargas;
+    public Autor getAutor() {
+        return autor;
     }
 
-    public void setDescargas(Long descargas) {
-        this.descargas = descargas;
+    public void setAutor(Autor autor) {
+        this.autor = autor;
     }
 
-    public List<String> getIdioma() {
+    public String getIdioma() {
         return idioma;
     }
 
-    public void setIdioma(List<String> idioma) {
-        this.idioma = idioma;
+    public void setIdioma(String idiomoas) {
+        this.idioma = idiomoas;
     }
 
-    public List<Autor> getAutores() {
-        return autores;
+    public Integer getNumeroDeDescargas() {
+        return numeroDeDescargas;
     }
 
-    public void setAutores(List<Autor> autores) {
-        autores.forEach(autor -> autor.setLibro(this));
-        this.autores = autores;
+    public void setNumeroDeDescargas(Integer numeroDeDescargas) {
+        this.numeroDeDescargas = numeroDeDescargas;
     }
 }
