@@ -19,7 +19,7 @@ public class Principal {
 
     private String head = """
             ---------------------------------------------------
-                        *****  Detalles libros  *****      
+                           *****  Resultados  *****      
             --------------------------------------------------- 
                 """;
     public Principal(AutorRepository autorRepository, LibroRepository libroRepository) {
@@ -48,6 +48,7 @@ public class Principal {
 
             System.out.println(menu);
             try {
+                System.out.println("Ingrese  una opcion: ");
                 opcion = teclado.nextInt();
                 teclado.nextLine();
 
@@ -74,7 +75,7 @@ public class Principal {
                         System.out.println("Opción no válida. Por favor, intenta de nuevo.");
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Entrada no válida. Por favor, ingresa un número.");
+                System.out.println("Entrada no válida. Por favor, ingresa una opcion valida.");
                 teclado.nextLine();
             }
         }
@@ -135,11 +136,10 @@ public class Principal {
     private void listarTodosLosAutores() {
         List<Autor> autores = autorRepository.findAll();
 
+        System.out.println(head);
         autores.forEach(autor -> {
             System.out.println("---------------------------------------------------");
             System.out.println("Nombre: " + autor.getNombre());
-            System.out.println("Fecha de nacimiento: " + autor.getFechaNacimiento());
-            System.out.println("Fecha de fallecimiento: " + (autor.getFechaDefuncion() != null ? autor.getFechaDefuncion() : "N/A"));
 
             String titulosLibros = autor.getLibro().stream()
                     .map(Libro::getTitulo)
@@ -163,9 +163,11 @@ public class Principal {
             if(autoresVivos.isEmpty()){
                 System.out.println("\nNo hay autores vivos en ese periodo");
             } else {
+                System.out.println(head);
                 for (Autor autor : autoresVivos) {
                     System.out.println("Nombre: " + autor.getNombre());
                     System.out.println("Fecha de nacimiento: " + autor.getFechaNacimiento());
+                    System.out.println("Fecha de fallecimiento: " + (autor.getFechaDefuncion() != null ? autor.getFechaDefuncion() : "N/A"));
                     System.out.println("-------------------------");
                 }
             }
@@ -199,10 +201,11 @@ public class Principal {
 
             int opcion = -1;
             try {
+                System.out.println("Ingrese  una opcion: ");
                 opcion = teclado.nextInt();
                 teclado.nextLine();
             } catch (InputMismatchException e) {
-                System.out.println("Entrada no válida. Por favor, ingresa un número.");
+                System.out.println("Entrada no válida. Por favor, ingresa dato valido.");
                 teclado.nextLine();
                 continue;
             }
@@ -218,15 +221,11 @@ public class Principal {
                 if (libros.isEmpty()) {
                     System.out.println("No se encontraron libros en el idioma seleccionado.");
                 } else {
-                    String cabecera = """
-                   ---------------------------------------------------
-                   *****  Libros en el idioma que selecciono  *****     
-                   --------------------------------------------------- 
-                            """;
-                    System.out.println(cabecera);
+                    System.out.println(head);
                     libros.forEach(libro -> System.out.printf(
                             " Codigo idioma: %s   Titulo: %s%n",  libro.getIdioma(), libro.getTitulo()));
                     System.out.println("----------------------------------------------------\n");
+
                 }
             } else {
                 System.out.println("Opción no válida, por favor intente de nuevo.");
